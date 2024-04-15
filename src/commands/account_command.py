@@ -23,21 +23,23 @@ class AccountCommand(commands.Cog):
 
         account_details = await accountRequest()
         account_donation = await accountRequest(True)
-        if not account_details["success"] or not account_donation["success"]:
+        if not account_details["success"]:
             account = discord.Embed(
                 description="Es gab einen Fehler mit der Verbindung.",
                 color=embed_color
             )
         else:
             account_detail = account_details["data"]
-            account_donate = account_donation["data"]
+            icon_url = None
+            if account_donation["success"]:
+                icon_url = account_donation["data"]["profile_picture"]
 
             account = discord.Embed(
                 color=embed_color
             )
             account.set_author(
                 name=account_detail["username"],
-                icon_url=account_donate["profile_picture"],
+                icon_url=icon_url,
                 url=url_web_users
             )
             account.add_field(
